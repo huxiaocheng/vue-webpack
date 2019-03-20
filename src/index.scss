@@ -1,0 +1,9 @@
+body {
+  background: #888; 
+  .border {
+    width: 100px;
+    height: 100px;
+    border: 1px solid red;
+    transform: translate(100px, 100px);
+  }
+}
