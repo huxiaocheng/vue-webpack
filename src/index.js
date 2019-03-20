@@ -1,7 +1,9 @@
-import image from './test.gif';
 import './index.css';
+import { add } from './math';
 
-const img = new Image();
-img.src = image;
-img.classList.add('border');
-document.body.appendChild(img);
+const btn = document.createElement('button');
+btn.innerHTML = 'btn';
+btn.classList.add('border');
+document.body.appendChild(btn);
+
+add(1,3);

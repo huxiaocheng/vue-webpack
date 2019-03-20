@@ -1,7 +1,8 @@
 {
   "name": "webpack-demo",
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "*.scss"
   ],
   "version": "1.0.0",
   "description": "",
@@ -9,7 +10,7 @@
   "scripts": {
     "dev-build": "webpack --profile --json > stats.json --config ./build/webpack.dev.js",
     "test": "webpack --config ./build/webpack.base.js",
-    "dev": "webpack-dev-server --config ./build/webpack.dev.js",
+    "dev": "webpack-dev-server --config ./build/webpack.base.js",
     "build": "webpack --config ./build/webpack.prod.js"
   },
   "author": "cc",
@@ -32,6 +33,7 @@
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "uglify-es": "^3.3.9",
     "uglifyjs-webpack-plugin": "^2.1.2",
     "url-loader": "^1.1.2",
     "webpack": "^4.29.6",

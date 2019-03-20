@@ -1,11 +1,12 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-  mode: "development",
-  // mode: "production",
+  // mode: "development",
+  mode: "production",
+  devtool: 'cheap-module-eval-source-map',
   entry: {
     main: "./src/index.js"
   },
@@ -17,13 +18,21 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html"
     }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
-    
+    contentBase: path.resolve(__dirname, 'dist/'),
+    hot: true,
+    historyApiFallback: true
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader:'babel-loader'
+      },
       {
         test: /\.(gif|jpg|png|webp)$/, //图片
         use: {
@@ -46,7 +55,11 @@ module.exports = {
       },
       {
         test: /\.css$/,  // css
-        use: ["style-loader", "css-loader", "postcss-loader"]
+        use: [
+          "style-loader", 
+          "css-loader", 
+          "postcss-loader"
+        ]
       },
       {
         test: /\.scss$/,  // scss
