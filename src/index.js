@@ -1,9 +1,5 @@
-import './index.css';
-import { add } from './math';
+// import './index.scss';
 
-const btn = document.createElement('button');
-btn.innerHTML = 'btn';
-btn.classList.add('border');
-document.body.appendChild(btn);
-
-add(1,3);
+console.log(_.join(['a','b'], '-'));
+console.log(_.join(['a','b'], '-'));
+console.log(this === window);

@@ -1,9 +1,12 @@
 const merge = require('webpack-merge');
-const baseConfig = require('./webpack.base.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const baseConfig = require('./webpack.base.js');
+
 const prodConfig = {
   mode: 'production',
+  devtool: 'cheap-module-source-map',
   output: {
     filename: 'js/[name].[contenthash].js',
     chunkFilename: 'js/[name].[contenthash].chunk.js',
@@ -14,9 +17,16 @@ const prodConfig = {
       chunkFilename: 'css/[name].chunk.css',
     })
   ],
-  optimization: {
-    minimizer: [new OptimizeCssAssetsPlugin({})] // css压缩
-  },
+optimization: {
+  minimizer: [
+    new UglifyJsPlugin({
+      cache: true,
+      parallel: true,
+      sourceMap: true
+    }),
+    new OptimizeCssAssetsPlugin({}) // css压缩
+  ] 
+},
   module: {
     rules: [
       {

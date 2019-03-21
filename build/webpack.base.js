@@ -1,17 +1,13 @@
 const path = require("path");
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require('webpack');
 
 module.exports = {
-  // mode: "development",
-  mode: "production",
-  devtool: 'cheap-module-eval-source-map',
   entry: {
     main: "./src/index.js"
   },
   output: {
-    filename: 'js/[name].js',
     path: path.resolve(__dirname, "../dist")
   },
   plugins: [
@@ -19,19 +15,32 @@ module.exports = {
       template: "./src/index.html"
     }),
     new CleanWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.ProvidePlugin({
+      _: 'lodash'
+    })
   ],
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist/'),
-    hot: true,
-    historyApiFallback: true
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          filename: 'vendors/vendors.js',
+        },
+        default: {
+          filename: 'common.js',
+        }
+      }
+    }
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader:'babel-loader'
+        use: [
+          'babel-loader', 
+          'imports-loader?this=>window'
+        ]
       },
       {
         test: /\.(gif|jpg|png|webp)$/, //图片
@@ -52,29 +61,8 @@ module.exports = {
             outputPath: "iconfont"
           }
         }
-      },
-      {
-        test: /\.css$/,  // css
-        use: [
-          "style-loader", 
-          "css-loader", 
-          "postcss-loader"
-        ]
-      },
-      {
-        test: /\.scss$/,  // scss
-        use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              importLoaders: 2
-            }
-          },
-          "sass-loader",
-          "postcss-loader"
-        ]
       }
     ]
-  }
+  },
+  performance: false
 };
