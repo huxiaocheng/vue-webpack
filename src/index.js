@@ -1,5 +1,6 @@
-// import './index.scss';
+import Vue from 'vue';
+import App from './app.vue';
 
-console.log(_.join(['a','b'], '-'));
-console.log(_.join(['a','b'], '-'));
-console.log(this === window);
+new Vue({
+  render: h => h(App)
+}).$mount('#app')

@@ -1,22 +1,28 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const webpack = require('webpack');
+const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
-module.exports = {
-  entry: {
-    main: "./src/index.js"
-  },
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
+
+const baseConfig = {
+  entry: resolve('src'),
   output: {
-    path: path.resolve(__dirname, "../dist")
+    path: resolve('dist')
+  },
+  resolve: {
+    extensions: ['.js', '.vue'],
+    alias: {
+      '@': resolve('src')
+    }
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html"
-    }),
     new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({
-      _: 'lodash'
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      template: './index.html'
     })
   ],
   optimization: {
@@ -24,10 +30,10 @@ module.exports = {
       chunks: 'all',
       cacheGroups: {
         vendors: {
-          filename: 'vendors/vendors.js',
+          filename: 'vendors/vendors.js'
         },
         default: {
-          filename: 'common.js',
+          filename: 'common.js'
         }
       }
     }
@@ -35,34 +41,45 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
+      {
+        test: /\.(png|jpe?g|gif|)$/,
         use: [
-          'babel-loader', 
-          'imports-loader?this=>window'
+          {
+            loader: 'url-loader',
+            options: {
+              name: 'image/[name].[hash:8].[ext]',
+              limit: 10000,
+              fallback: 'file-loader'
+            }
+          },
         ]
       },
       {
-        test: /\.(gif|jpg|png|webp)$/, //图片
-        use: {
-          loader: "url-loader",
-          options: {
-            name: "[name]_[hash:8].[ext]",
-            outputPath: "image",
-            limit: 2048
-          }
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'fonts/[name].[hash:8].[ext]'
         }
       },
       {
-        test: /\.(eot|svg|ttf|woff)$/,  // 字体
-        use: {
-          loader: "file-loader",
-          options: {
-            outputPath: "iconfont"
-          }
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'media/[name].[hash:8].[ext]'
         }
-      }
+      },
     ]
-  },
-  performance: false
+  }
 };
+
+module.exports = baseConfig;

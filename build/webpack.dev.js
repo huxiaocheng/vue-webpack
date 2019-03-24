@@ -1,6 +1,6 @@
+const path = require('path');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
-const path = require('path');
 const baseConfig = require('./webpack.base.js');
 
 const devConfig = {
@@ -8,35 +8,46 @@ const devConfig = {
   devtool: 'cheap-module-eval-source-map',
   output: {
     filename: '[name].js',
-    chunkFilename: '[name].chunk.js',
+    chunkFilename: '[name].chunk.js'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist/'),
+    contentBase: path.resolve(__dirname, 'dist'),
     hot: true,
+    open: true,
+    compress: false,
     historyApiFallback: true
   },
   module: {
-    rules: [{
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader', 'postcss-loader']
-    }, {
-      test: /\.scss$/,
-      use: [
-        'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 2  
-          }
-        },
-        'sass-loader',
-        'postcss-loader'
-      ]
-    }]
+    rules: [
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use:[
+          'vue-style-loader',
+          'css-loader', 
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2  
+            }
+          }, 
+          'sass-loader',
+          'postcss-loader'
+        ]
+      }
+    ]
   }
-}
+};
 
 module.exports = merge(baseConfig, devConfig);
