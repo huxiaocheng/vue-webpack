@@ -115,9 +115,13 @@ plugins: [
 ]
 ```
 ### 解析各种文件
-webpack是只会处理js文件的，所以如果要打包其他的包括图片、字体、css等需要借助loader的帮助，安装解析各种文件所需的loader以及相关包
+webpack是只会处理js文件的，所以如果要打包其他的包括图片、字体、es6转es5、css等需要借助loader的帮助，安装解析各种文件所需的loader以及相关包
 ```
 npm i -D @babel/core @babel/preset-env babel-loader css-loader file-loader url-loader vue-loader vue-template-compiler core-js
+```
+**将ES6解析为老浏览器也可以识别的ES5，使用babel**
+```
+npm i @babel/polyfill
 ```
 **无论开发模式还是生产模式我们都需要处理这些文件，所以在base文件下写入以下代码：**
 ```
@@ -169,7 +173,7 @@ module: {
 }
 ```
 **在根目录下新建一个.babelrc**<br>
-因为babel的options的配置以后可能会比较多，所以我们单独用一个文件来放置babel的配置
+让@babel/polyfill可以按需引入，减少打包体积，因为babel的options的配置以后可能会比较多，所以我们单独用一个文件来放置babel的配置
 ```
 {
   "presets": [
@@ -195,7 +199,7 @@ devServer: {
   historyApiFallback: true  //单页路由
 },
 ```
-这一块配置还是挺多的，只是做了简单的配置
+这一块配置挺多的，只是做了基本的配置
 
 ### 热更新HRM
 启用了devServer后每次保存会刷新页面，我们可以用热更新让局部改变而不更新其他未改变的页面。在dev文件内配置一个webpack的插件，并启动devServer的hot属性。针对的是css部分，js部分会有loader来处理，或者需要手动实现，具体可查看webpack官网。
@@ -276,10 +280,12 @@ optimization: {
 }
 ```
 这里只是最简单的配置，其他的交给默认参数。
+<br>
 **然后在.babelrc文件内添加以下配置：**
 ``
 npm i -D @babel/plugin-syntax-dynamic-import
-<br>
+``
+``
 {
   "plugins": ["@babel/plugin-syntax-dynamic-import"]
 }
