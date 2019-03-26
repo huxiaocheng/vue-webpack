@@ -18,7 +18,8 @@ const devConfig = {
     hot: true,
     open: true,
     compress: false,
-    historyApiFallback: true
+    historyApiFallback: true,
+    clientLogLevel: "none"
   },
   module: {
     rules: [
